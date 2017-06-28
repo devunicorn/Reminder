@@ -4,19 +4,23 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.devunicorn.reminder.R;
+import com.devunicorn.reminder.adapter.RemindListAdapter;
+import com.devunicorn.reminder.data.RemindData;
 
-/**
- * Created by Dell on 26.04.2017.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HistoryFragment extends AbstractTabFragment {
 
-    private static final int LAYOUT = R.layout.fragment_example;
+    private static final int LAYOUT = R.layout.fragment_history;
 
     public static HistoryFragment getInstance(Context context) {
         Bundle args = new Bundle();
@@ -31,7 +35,25 @@ public class HistoryFragment extends AbstractTabFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
+
+        RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(context));
+        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
+
         return view;
+    }
+
+    private List<RemindData> createMockRemindListData() {
+
+        List<RemindData> data = new ArrayList<>();
+        data.add(new RemindData("Item 1"));
+        data.add(new RemindData("Item 2"));
+        data.add(new RemindData("Item 3"));
+        data.add(new RemindData("Item 4"));
+        data.add(new RemindData("Item 5"));
+        data.add(new RemindData("Item 6"));
+
+        return data;
     }
 
     public void setContext(Context context) {
