@@ -14,6 +14,9 @@ import com.devunicorn.reminder.fagment.TodoFragment;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by Dell on 26.04.2017.
+ */
 
 public class TabsFragmentAdapter extends FragmentPagerAdapter {
 

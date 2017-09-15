@@ -1,4 +1,4 @@
-package com.devunicorn.reminder.fagment;
+package com.devunicorn.reminder.fragment;
 
 import java.text.SimpleDateFormat;
 
@@ -16,5 +16,10 @@ public class Utils {
     public static String getTime(long time) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH.mm");
         return timeFormat.format(time);
+    }
+
+    public static String getFullDate(long date) { // метод, возвращающий полную дату
+        SimpleDateFormat fullDateFormate = new SimpleDateFormat("dd.MM.yy  HH.mm");
+        return fullDateFormate.format(date);
     }
 }
