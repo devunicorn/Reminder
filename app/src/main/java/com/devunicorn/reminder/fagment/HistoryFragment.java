@@ -55,7 +55,7 @@ public class HistoryFragment extends AbstractTabFragment {
 
         return data;
     }
-//test test
+
     public void setContext(Context context) {
         this.context = context;
     }
