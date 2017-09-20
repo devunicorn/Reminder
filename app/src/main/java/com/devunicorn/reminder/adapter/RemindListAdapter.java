@@ -10,16 +10,23 @@ import android.widget.TextView;
 
 import com.devunicorn.reminder.R;
 import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.fragment.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.RemindViewHolder> {
 
     private List<RemindData> data;
 
+    public RemindListAdapter() {
+        this.data = new ArrayList<>();
+    }
+
     public RemindListAdapter(List<RemindData> data) {
         this.data = data;
     }
+
 
     @Override
     public RemindViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,9 +36,13 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
     }
 
     @Override
-    public void onBindViewHolder(RemindViewHolder holder, int position) {
-        holder.title.setText(data.get(position).getTitle());
-
+    public void onBindViewHolder(RemindViewHolder holder, int position) { //просечиваем значение на item; holder - экземпляр remindviewholder
+        RemindData item = data.get(position);
+        holder.itemView.setEnabled(true); //активация возможности нажатия таска
+        holder.title.setText(item.getTitle());
+        holder.date.setText(Utils.getFullDate(item.getDate()));
+        //holder.title.setText(data.get(position).getTitle());
+        //holder.date.setText(String.valueOf(data.get(position).getDate()));
     }
 
     @Override
@@ -39,15 +50,31 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
         return data.size();
     }
 
+    public RemindData getItem(int position) {
+        return data.get(position);
+    }
+
+    public void addItem(RemindData item) {
+        data.add(item);
+        notifyItemInserted(getItemCount() - 1); //сообщаем о добавлении нового элемента в список (анимация при добавлении)
+    }
+
+    public void addItem(int location, RemindData item) { //добаление элемента списка в определенную позицию
+        data.add(location, item);
+        notifyItemInserted(location);
+    }
+
     public static class RemindViewHolder extends RecyclerView.ViewHolder {
 
         CardView cardView;
         TextView title;
+        TextView date;
 
         public RemindViewHolder(View itemView) {
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.title);
+            date = (TextView) itemView.findViewById(R.id.date);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
         }
     }

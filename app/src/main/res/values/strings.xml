@@ -10,14 +10,13 @@
     <string name="tab_item_todo">TODO</string>
     <string name="tab_item_birthdays">Birthdays</string>
 
-    <string name="dialog_title">Adding task</string>
+    <string name="dialog_title">AddingTaskDialog</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_error_empty_title">Please, enter the title</string>
+    <string name="dialog_error_empty_title">Please, enter the title.</string>
 
     <string name="task_title">Title</string>
     <string name="task_date">Date</string>
     <string name="task_time">Time</string>
-    
 
 </resources>

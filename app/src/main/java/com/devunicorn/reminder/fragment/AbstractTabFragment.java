@@ -1,4 +1,4 @@
-package com.devunicorn.reminder.fagment;
+package com.devunicorn.reminder.fragment;
 
 
 import android.content.Context;

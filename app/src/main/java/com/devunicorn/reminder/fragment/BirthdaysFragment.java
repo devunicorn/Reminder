@@ -1,9 +1,8 @@
-package com.devunicorn.reminder.fagment;
+package com.devunicorn.reminder.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,16 @@ import com.devunicorn.reminder.R;
  * Created by Dell on 26.04.2017.
  */
 
-public class IdeasFragment extends AbstractTabFragment {
+public class BirthdaysFragment extends AbstractTabFragment {
 
     private static final int LAYOUT = R.layout.fragment_example;
 
-    public static IdeasFragment getInstance(Context context) {
+    public static BirthdaysFragment getInstance(Context context) {
         Bundle args = new Bundle();
-        IdeasFragment fragment = new IdeasFragment();
+        BirthdaysFragment fragment = new BirthdaysFragment();
         fragment.setArguments(args);
         fragment.setContext(context);
-        fragment.setTitle(context.getString(R.string.tab_item_ideas));
+        fragment.setTitle(context.getString(R.string.tab_item_birthdays));
         return fragment;
     }
 

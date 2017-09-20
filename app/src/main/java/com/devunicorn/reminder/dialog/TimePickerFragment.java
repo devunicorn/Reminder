@@ -1,15 +1,14 @@
 package com.devunicorn.reminder.dialog;
 
+
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
-
-import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.os.Bundle;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
-
 
 public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
@@ -26,7 +25,7 @@ public class TimePickerFragment extends DialogFragment
     }
 
     @Override
-    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+    public void onTimeSet(TimePicker timePicker, int hourseOfDay, int minute) {
 
     }
 }

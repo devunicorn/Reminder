@@ -1,15 +1,16 @@
 package com.devunicorn.reminder.dialog;
 
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import java.util.Calendar;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
+import java.util.Calendar;
+
+
 public class DatePickerFragment extends DialogFragment
-        implements DatePickerDialog.OnDateSetListener {
+        implements DatePickerDialog.OnDateSetListener{
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -23,7 +24,7 @@ public class DatePickerFragment extends DialogFragment
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
 
     }
 }

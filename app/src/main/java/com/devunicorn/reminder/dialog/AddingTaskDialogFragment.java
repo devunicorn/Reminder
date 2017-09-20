@@ -17,17 +17,18 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.devunicorn.reminder.R;
-import com.devunicorn.reminder.fagment.Utils;
+import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.fragment.Utils;
 
 import java.util.Calendar;
-
 
 public class AddingTaskDialogFragment extends DialogFragment {
 
     private AddingTaskListener addingTaskListener;
+    private RemindData remindData;
 
     public interface AddingTaskListener {
-        void onTaskAdded();
+        void onTaskAdded(RemindData newTask);
 
         void onTaskAddingCancel();
     }
@@ -35,6 +36,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         try {
             addingTaskListener = (AddingTaskListener) activity;
         } catch (ClassCastException ex) {
@@ -45,18 +47,21 @@ public class AddingTaskDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); //класс, создающий диалоговое окно
+        remindData = new RemindData();
+        final Calendar calendar = Calendar.getInstance();//текущее время
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY), +1); //если не указано время, срабатывает через час
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(R.string.dialog_title);
 
-        LayoutInflater inflater = getActivity().getLayoutInflater(); //layoutinflater - класс, создающий view element из содержимого layout file
-
-        View container = inflater.inflate(R.layout.activity_new_task, null);
+        LayoutInflater inflater = getActivity().getLayoutInflater();// для работы с макетом диалога
+        View container = inflater.inflate(R.layout.dialog_task, null);
 
         final TextInputLayout tilTitle = (TextInputLayout) container.findViewById(R.id.tilDialogTaskTitle);
         final EditText etTitle = tilTitle.getEditText();
 
-        TextInputLayout tilDate = (TextInputLayout) container.findViewById(R.id.tilDialogTaskDate);
+        final TextInputLayout tilDate = (TextInputLayout) container.findViewById(R.id.tilDialogTaskDate);
         final EditText etDate = tilDate.getEditText();
 
         TextInputLayout tilTime = (TextInputLayout) container.findViewById(R.id.tilDialogTaskTime);
@@ -71,16 +76,18 @@ public class AddingTaskDialogFragment extends DialogFragment {
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (etDate.length() == 0) {
                     etDate.setText(" ");
                 }
                 DialogFragment datePickerFragment = new DatePickerFragment() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMotnh) {
-                        Calendar dateCalendar = Calendar.getInstance();
-                        dateCalendar.set(year, monthOfYear, dayOfMotnh);
-                        etDate.setText(Utils.getDate(dateCalendar.getTimeInMillis()));
+                    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        //Calendar dateCalendar = Calendar.getInstance();
+                        //dateCalendar.set(year, monthOfYear, dayOfMonth);
+                        etDate.setText(Utils.getDate(calendar.getTimeInMillis()));
                     }
 
                     @Override
@@ -92,24 +99,28 @@ public class AddingTaskDialogFragment extends DialogFragment {
             }
         });
 
+
         etTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (etTime.length() == 0) {
                     etTime.setText(" ");
                 }
                 DialogFragment timePickerFragment = new TimePickerFragment() {
+
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Calendar timeCalendar = Calendar.getInstance();
-                        timeCalendar.set(0, 0, 0, hourOfDay, minute);
-                        etTime.setText(Utils.getTime(timeCalendar.getTimeInMillis()));
+                    public void onTimeSet(TimePicker timePicker, int houreOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, houreOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(Calendar.SECOND, 0);
+                        //Calendar timeCalendar = Calendar.getInstance();
+                        //timeCalendar.set(0, 0, 0, hourseOfDay, minute);
+                        etTime.setText(Utils.getTime(calendar.getTimeInMillis()));
                     }
 
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        etDate.setText(null);
+                        etTime.setText(null);
                     }
                 };
                 timePickerFragment.show(getFragmentManager(), "TimePickerFragment");
@@ -118,31 +129,35 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                addingTaskListener.onTaskAdded();
-                dialogInterface.dismiss();
+            public void onClick(DialogInterface dialog, int i) {
+                remindData.setTitle(etTitle.getText().toString()); //присваивание title из RemindData введенный title
+                if(etDate.length() != 0 || etTime.length() != 0) {
+                    remindData.setDate(calendar.getTimeInMillis()); //присваиваем date из RemindData введенный date
+                }
+                addingTaskListener.onTaskAdded(remindData); //передача нового объекта, заполненного данными в onTaskAdded
+                dialog.dismiss();
             }
         });
 
         builder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialog, int i) {
                 addingTaskListener.onTaskAddingCancel();
-                dialogInterface.cancel();
+                dialog.cancel();
             }
         });
 
-        AlertDialog alertDialog = builder.create(); //создание диалога
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() { //слушатель для диалогового окна
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(DialogInterface dialogInterface) {
-                final Button pozitiveButton = ((AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
+            public void onShow(DialogInterface dialog) {
+                final Button positiveButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
                 if (etTitle.length() == 0) {
-                    pozitiveButton.setEnabled(false); //блокировка кнопки, для предотвращения создания пустых тасков
+                    positiveButton.setEnabled(false);
                     tilTitle.setError(getResources().getString(R.string.dialog_error_empty_title));
                 }
 
-                etTitle.addTextChangedListener(new TextWatcher() { //слушатель события изменения текста
+                etTitle.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -151,10 +166,10 @@ public class AddingTaskDialogFragment extends DialogFragment {
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         if (charSequence.length() == 0) {
-                            pozitiveButton.setEnabled(false);
+                            positiveButton.setEnabled(false);
                             tilTitle.setError(getResources().getString(R.string.dialog_error_empty_title));
                         } else {
-                            pozitiveButton.setEnabled(true);
+                            positiveButton.setEnabled(true);
                             tilTitle.setErrorEnabled(false);
                         }
                     }
@@ -166,6 +181,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
                 });
             }
         });
+
 
         return alertDialog;
     }
