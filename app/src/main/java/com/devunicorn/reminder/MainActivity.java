@@ -18,7 +18,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.devunicorn.reminder.adapter.TabsFragmentAdapter;
+import com.devunicorn.reminder.data.RemindData;
 import com.devunicorn.reminder.dialog.AddingTaskDialogFragment;
+import com.devunicorn.reminder.fragment.HistoryFragment;
 
 
 public class MainActivity extends AppCompatActivity
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private FloatingActionButton fab;
     private FragmentManager fragmentManager;
+    private TabsFragmentAdapter adapter;
+    private HistoryFragment historyFragment;
 
 
     @Override
@@ -63,11 +67,12 @@ public class MainActivity extends AppCompatActivity
 
     private void initTabs() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        TabsFragmentAdapter adapter = new TabsFragmentAdapter(this, getSupportFragmentManager());
+        adapter = new TabsFragmentAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+        historyFragment = (HistoryFragment) adapter.getItem(0);
     }
 
     private void initNavigationView() {
@@ -107,8 +112,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTaskAdded() {
-        Toast.makeText(this, "Task added", Toast.LENGTH_LONG).show();
+    public void onTaskAdded(RemindData newTask) {
+
+        historyFragment.addTask(newTask); // добавление только на вкладку HISTORY
+
+        //Toast.makeText(this, "Task added", Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -2,9 +2,6 @@ package com.devunicorn.reminder.fragment;
 
 import java.text.SimpleDateFormat;
 
-/**
- * Created by Anton on 11.09.2017.
- */
 
 public class Utils {
 

@@ -17,16 +17,18 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.devunicorn.reminder.R;
-import com.devunicorn.reminder.fagment.Utils;
+import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.fragment.Utils;
 
 import java.util.Calendar;
 
 public class AddingTaskDialogFragment extends DialogFragment {
 
     private AddingTaskListener addingTaskListener;
+    private RemindData remindData;
 
     public interface AddingTaskListener {
-        void onTaskAdded();
+        void onTaskAdded(RemindData newTask);
 
         void onTaskAddingCancel();
     }
@@ -44,6 +46,10 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        remindData = new RemindData();
+        final Calendar calendar = Calendar.getInstance();//текущее время
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY), +1); //если не указано время, срабатывает через час
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -76,9 +82,12 @@ public class AddingTaskDialogFragment extends DialogFragment {
                 DialogFragment datePickerFragment = new DatePickerFragment() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-                        Calendar dateCalendar = Calendar.getInstance();
-                        dateCalendar.set(year, monthOfYear, dayOfMonth);
-                        etDate.setText(Utils.getDate(dateCalendar.getTimeInMillis()));
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        //Calendar dateCalendar = Calendar.getInstance();
+                        //dateCalendar.set(year, monthOfYear, dayOfMonth);
+                        etDate.setText(Utils.getDate(calendar.getTimeInMillis()));
                     }
 
                     @Override
@@ -100,10 +109,13 @@ public class AddingTaskDialogFragment extends DialogFragment {
                 DialogFragment timePickerFragment = new TimePickerFragment() {
 
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int hourseOfDay, int minute) {
-                        Calendar timeCalendar = Calendar.getInstance();
-                        timeCalendar.set(0, 0, 0, hourseOfDay, minute);
-                        etTime.setText(Utils.getTime(timeCalendar.getTimeInMillis()));
+                    public void onTimeSet(TimePicker timePicker, int houreOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, houreOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(Calendar.SECOND, 0);
+                        //Calendar timeCalendar = Calendar.getInstance();
+                        //timeCalendar.set(0, 0, 0, hourseOfDay, minute);
+                        etTime.setText(Utils.getTime(calendar.getTimeInMillis()));
                     }
 
                     @Override
@@ -118,7 +130,11 @@ public class AddingTaskDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                addingTaskListener.onTaskAdded();
+                remindData.setTitle(etTitle.getText().toString()); //присваивание title из RemindData введенный title
+                if(etDate.length() != 0 || etTime.length() != 0) {
+                    remindData.setDate(calendar.getTimeInMillis()); //присваиваем date из RemindData введенный date
+                }
+                addingTaskListener.onTaskAdded(remindData); //передача нового объекта, заполненного данными в onTaskAdded
                 dialog.dismiss();
             }
         });

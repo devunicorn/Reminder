@@ -40,23 +40,21 @@ public class HistoryFragment extends AbstractTabFragment {
 
         rv = (RecyclerView) view.findViewById(R.id.recyclerView); //найдем recycler view для заагрузки card view в layout history
         rv.setLayoutManager(new LinearLayoutManager(context)); //контекст, расположенный в AbstractTabFragment
-        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
-        //adapter = new RemindListAdapter();
-        //rv.setAdapter(adapter);
+        //rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
+        adapter = new RemindListAdapter();
+        rv.setAdapter(adapter);
 
         return view;
     }
 
-   /* public void addTask(RemindData newTask) {
+    public void addTask(RemindData newTask) {
         int position = -1;
 
         for (int i = 0; i < adapter.getItemCount(); i++) { // добавление элементов по дате
-            if (adapter.getItem(i).isTask()) {
-                RemindData item = (RemindData) adapter.getItem(i);
-                if (newTask.getDate() < item.getDate()) { // если значение нового элемента списка(таск) будет меньше, чем дата любого из существующих тасков, то новый таск добавляется позицией ВЫШЕ
-                    position = i;
-                    break;
-                }
+            RemindData item = (RemindData) adapter.getItem(i);
+            if (newTask.getDate() < item.getDate()) { // если значение нового элемента списка(таск) будет меньше, чем дата любого из существующих тасков, то новый таск добавляется позицией ВЫШЕ
+                position = i;
+                break;
             }
         }
         if (position != -1) { //если ни один элемент из списка не больше нового, добавляем элемент позицией НИЖЕ
@@ -64,23 +62,15 @@ public class HistoryFragment extends AbstractTabFragment {
         } else {
             adapter.addItem(newTask);
         }
-    }*/
-
-///hi everyone
+    }
 
 
-    private List<RemindData> createMockRemindListData() { //заглушка, тестовые данные для вывода (база данных, сервер)
+    /*private List<RemindData> createMockRemindListData() { //заглушка, тестовые данные для вывода (база данных, сервер)
 
         List<RemindData> data = new ArrayList<>();
-        data.add(new RemindData("Item 1"));
-        data.add(new RemindData("Item 2"));
-        data.add(new RemindData("Item 3"));
-        data.add(new RemindData("Item 4"));
-        data.add(new RemindData("Item 5"));
-        data.add(new RemindData("Item 6"));
-
+        data.add(new RemindData("Item 1", 120120120));
         return data;
-    }
+    }*/
 
     public void setContext(Context context) {
         this.context = context;
