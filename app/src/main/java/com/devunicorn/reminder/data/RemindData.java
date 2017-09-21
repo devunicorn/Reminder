@@ -1,51 +1,48 @@
 package com.devunicorn.reminder.data;
 
 
+import com.devunicorn.reminder.Constants;
+
+import java.util.Date;
+
 public class RemindData {
-
-    public static final int PRIORITY_LOW = 0;
-    public static final int PRIORITY_NORMAL = 1;
-    public static final int PRIORITY_HIGH = 2;
-
-    public static final String[] PRIORITY_LEVELS = {"Low priority", "Normal priority", "High priority"};
-
-    public static final int STATUS_OVERDUE = 0;
-    public static final int STATUS_CURRENT = 1;
-    public static final int STATUS_DONE = 2;
 
     private String title;
     private long date;
     private long time;
     private int priority;
     private int status;
+    private long timeStamp;
 
     public RemindData() {
         this.status = -1;
+        this.timeStamp = new Date().getTime();
     }
 
-    public RemindData(String title, long date, int priority, int status) {
+    public RemindData(String title, long date, int priority, int status, long timeStamp) {
         this.title = title;
         this.date = date;
         this.priority = priority;
         this.status = status;
+        this.timeStamp = timeStamp;
     }
 
     public String getPriorityStatus() {
         switch (getPriority()) {
-            case PRIORITY_HIGH:
-                if (getStatus() == STATUS_CURRENT || getStatus() == STATUS_OVERDUE) {
+            case Constants.PRIORITY_HIGH:
+                if (getStatus() == Constants.STATUS_CURRENT || getStatus() == Constants.STATUS_OVERDUE) {
                     return "High priority - done";
                 } else {
                     return "High priority";
                 }
-            case PRIORITY_NORMAL:
-                if (getStatus() == STATUS_CURRENT || getStatus() == STATUS_OVERDUE) {
+            case Constants.PRIORITY_NORMAL:
+                if (getStatus() == Constants.STATUS_CURRENT || getStatus() == Constants.STATUS_OVERDUE) {
                     return "Normal priority - done";
                 } else {
                     return "Normal priority";
                 }
-            case PRIORITY_LOW:
-                if (getStatus() == STATUS_CURRENT || getStatus() == STATUS_OVERDUE) {
+            case Constants.PRIORITY_LOW:
+                if (getStatus() == Constants.STATUS_CURRENT || getStatus() == Constants.STATUS_OVERDUE) {
                     return "Low priority - done";
                 } else {
                     return "Low priority";
@@ -53,6 +50,14 @@ public class RemindData {
             default:
                 return "";
         }
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public int getPriority() {

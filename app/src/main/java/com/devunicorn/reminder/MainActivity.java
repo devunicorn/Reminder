@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private FragmentManager fragmentManager;
     private TabsFragmentAdapter adapter;
-    private TodoFragment historyFragment;
+    private TodoFragment todoFragment;
 
 
     @Override
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-        historyFragment = (TodoFragment) adapter.getItem(0);
+        todoFragment = (TodoFragment) adapter.getItem(0);
     }
 
     private void initNavigationView() {
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTaskAdded(RemindData newTask) {
 
-        historyFragment.addTask(newTask); // добавление только на вкладку HISTORY
+        todoFragment.addTask(newTask); // добавление только на вкладку HISTORY
 
         //Toast.makeText(this, "Task added", Toast.LENGTH_LONG).show();
     }

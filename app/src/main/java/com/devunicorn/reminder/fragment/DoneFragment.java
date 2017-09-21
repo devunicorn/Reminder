@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
 
 
 public class DoneFragment extends AbstractTabFragment {
 
-    private static final int LAYOUT = R.layout.fragment_example;
+
 
     public static DoneFragment getInstance(Context context) {
         Bundle args = new Bundle();
@@ -26,7 +27,7 @@ public class DoneFragment extends AbstractTabFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(LAYOUT, container, false);
+        view = inflater.inflate(Constants.DONE_LAYOUT, container, false);
         return view;
     }
 

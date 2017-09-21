@@ -29,9 +29,9 @@ public class TodoFragment extends AbstractTabFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(Constants.HISTORY_LAYOUT, container, false);
+        view = inflater.inflate(Constants.TODO_LAYOUT, container, false);
 
-        rv = (RecyclerView) view.findViewById(R.id.recyclerView); //найдем recycler view для заагрузки card view в layout history
+        rv = (RecyclerView) view.findViewById(R.id.rvTodoFragment); //найдем recycler view для заагрузки card view в layout history
         rv.setLayoutManager(new LinearLayoutManager(context)); //контекст, расположенный в AbstractTabFragment
         //rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
         adapter = new RemindListAdapter(this);

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
 import com.devunicorn.reminder.data.RemindData;
 import com.devunicorn.reminder.fragment.Utils;
@@ -78,7 +79,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setView(container);
 
-        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, RemindData.PRIORITY_LEVELS);
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, Constants.PRIORITY_LEVELS);
         spPriority.setAdapter(priorityAdapter);
 
         spPriority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

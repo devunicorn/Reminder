@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
 import com.devunicorn.reminder.data.RemindData;
 import com.devunicorn.reminder.fragment.AbstractTabFragment;
@@ -96,9 +97,11 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
         holder.priority.setOnClickListener(new View.OnClickListener() { //на клик по Приоритету, меняется его статус
             @Override
             public void onClick(View view) {
-                if (item.getStatus() == RemindData.STATUS_CURRENT || item.getStatus() == RemindData.STATUS_OVERDUE) {
-                    item.setStatus(RemindData.STATUS_DONE);
-                } else item.setStatus(RemindData.STATUS_CURRENT);
+                if (item.getStatus() == Constants.STATUS_CURRENT || item.getStatus() == Constants.STATUS_OVERDUE) {
+                    item.setStatus(Constants.STATUS_DONE);
+                } else{
+                    item.setStatus(Constants.STATUS_CURRENT);
+                }
 
                 itemView.setVisibility(View.VISIBLE);
 
