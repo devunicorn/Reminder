@@ -11,9 +11,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.devunicorn.reminder.R;
@@ -67,11 +70,28 @@ public class AddingTaskDialogFragment extends DialogFragment {
         TextInputLayout tilTime = (TextInputLayout) container.findViewById(R.id.tilDialogTaskTime);
         final EditText etTime = tilTime.getEditText();
 
+        Spinner spPriority = (Spinner) container.findViewById(R.id.spDialogTaskPriority);
+
         tilTitle.setHint(getResources().getString(R.string.task_title));
         tilDate.setHint(getResources().getString(R.string.task_date));
         tilTime.setHint(getResources().getString(R.string.task_time));
 
         builder.setView(container);
+
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, RemindData.PRIORITY_LEVELS);
+        spPriority.setAdapter(priorityAdapter);
+
+        spPriority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                remindData.setPriority(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +151,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 remindData.setTitle(etTitle.getText().toString()); //присваивание title из RemindData введенный title
-                if(etDate.length() != 0 || etTime.length() != 0) {
+                if (etDate.length() != 0 || etTime.length() != 0) {
                     remindData.setDate(calendar.getTimeInMillis()); //присваиваем date из RemindData введенный date
                 }
                 addingTaskListener.onTaskAdded(remindData); //передача нового объекта, заполненного данными в onTaskAdded

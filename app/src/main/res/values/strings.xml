@@ -5,10 +5,8 @@
     <string name="view_navigation_close">Close</string>
 
 
-    <string name="tab_item_history">History</string>
-    <string name="tab_item_ideas">Ideas</string>
     <string name="tab_item_todo">TODO</string>
-    <string name="tab_item_birthdays">Birthdays</string>
+    <string name="tab_item_done">Done</string>
 
     <string name="dialog_title">AddingTaskDialog</string>
     <string name="dialog_ok">OK</string>

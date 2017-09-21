@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.devunicorn.reminder.adapter.TabsFragmentAdapter;
 import com.devunicorn.reminder.data.RemindData;
 import com.devunicorn.reminder.dialog.AddingTaskDialogFragment;
-import com.devunicorn.reminder.fragment.HistoryFragment;
+import com.devunicorn.reminder.fragment.TodoFragment;
 
 
 public class MainActivity extends AppCompatActivity
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private FragmentManager fragmentManager;
     private TabsFragmentAdapter adapter;
-    private HistoryFragment historyFragment;
+    private TodoFragment historyFragment;
 
 
     @Override
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-        historyFragment = (HistoryFragment) adapter.getItem(0);
+        historyFragment = (TodoFragment) adapter.getItem(0);
     }
 
     private void initNavigationView() {
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showNotificationTab() {
-        viewPager.setCurrentItem(Constants.TAB_TWO);
+        viewPager.setCurrentItem(Constants.TAB_ONE);
     }
 
     private void initFab() {

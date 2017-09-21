@@ -6,10 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.devunicorn.reminder.fragment.AbstractTabFragment;
-import com.devunicorn.reminder.fragment.BirthdaysFragment;
-import com.devunicorn.reminder.fragment.HistoryFragment;
-import com.devunicorn.reminder.fragment.IdeasFragment;
 import com.devunicorn.reminder.fragment.TodoFragment;
+import com.devunicorn.reminder.fragment.DoneFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,9 +45,9 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
 
     private void initTabsMap(Context context) {
         tabs = new HashMap<>();
-        tabs.put(0, HistoryFragment.getInstance(context));
+        tabs.put(0, TodoFragment.getInstance(context));
         //tabs.put(1, IdeasFragment.getInstance(context));
-        tabs.put(1, TodoFragment.getInstance(context));
+        tabs.put(1, DoneFragment.getInstance(context));
         //tabs.put(3, BirthdaysFragment.getInstance(context));
     }
 }

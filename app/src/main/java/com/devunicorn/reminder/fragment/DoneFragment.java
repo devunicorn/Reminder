@@ -9,20 +9,17 @@ import android.view.ViewGroup;
 
 import com.devunicorn.reminder.R;
 
-/**
- * Created by Dell on 26.04.2017.
- */
 
-public class IdeasFragment extends AbstractTabFragment {
+public class DoneFragment extends AbstractTabFragment {
 
     private static final int LAYOUT = R.layout.fragment_example;
 
-    public static IdeasFragment getInstance(Context context) {
+    public static DoneFragment getInstance(Context context) {
         Bundle args = new Bundle();
-        IdeasFragment fragment = new IdeasFragment();
+        DoneFragment fragment = new DoneFragment();
         fragment.setArguments(args);
         fragment.setContext(context);
-        fragment.setTitle(context.getString(R.string.tab_item_ideas));
+        fragment.setTitle(context.getString(R.string.tab_item_done));
         return fragment;
     }
 
