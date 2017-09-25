@@ -2,6 +2,7 @@ package com.devunicorn.reminder.data;
 
 
 import com.devunicorn.reminder.Constants;
+import com.devunicorn.reminder.R;
 
 import java.util.Date;
 
@@ -27,28 +28,28 @@ public class RemindData {
         this.timeStamp = timeStamp;
     }
 
-    public String getPriorityStatus() {
+    public int getPriorityColor() {
         switch (getPriority()) {
             case Constants.PRIORITY_HIGH:
                 if (getStatus() == Constants.STATUS_CURRENT || getStatus() == Constants.STATUS_OVERDUE) {
-                    return "High priority - done";
+                    return R.color.priority_high;
                 } else {
-                    return "High priority";
+                    return R.color.priority_high_selected;
                 }
             case Constants.PRIORITY_NORMAL:
                 if (getStatus() == Constants.STATUS_CURRENT || getStatus() == Constants.STATUS_OVERDUE) {
-                    return "Normal priority - done";
+                    return R.color.priority_normal;
                 } else {
-                    return "Normal priority";
+                    return R.color.priority_normal_selected;
                 }
             case Constants.PRIORITY_LOW:
                 if (getStatus() == Constants.STATUS_CURRENT || getStatus() == Constants.STATUS_OVERDUE) {
-                    return "Low priority - done";
+                    return R.color.priority_low;
                 } else {
-                    return "Low priority";
+                    return R.color.priority_low_selected;
                 }
             default:
-                return "";
+                return 0;
         }
     }
 

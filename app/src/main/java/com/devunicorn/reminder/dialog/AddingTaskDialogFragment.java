@@ -29,11 +29,9 @@ import java.util.Calendar;
 public class AddingTaskDialogFragment extends DialogFragment {
 
     private AddingTaskListener addingTaskListener;
-    private RemindData remindData;
 
     public interface AddingTaskListener {
         void onTaskAdded(RemindData newTask);
-
         void onTaskAddingCancel();
     }
 
@@ -51,7 +49,6 @@ public class AddingTaskDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        remindData = new RemindData();
         final Calendar calendar = Calendar.getInstance();//текущее время
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY), +1); //если не указано время, срабатывает через час
 
@@ -79,17 +76,21 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setView(container);
 
-        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, Constants.PRIORITY_LEVELS);
+        final RemindData task = new RemindData();
+
+
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, Constants.PRIORITY_LEVELS);
         spPriority.setAdapter(priorityAdapter);
 
         spPriority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                remindData.setPriority(position);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                task.setPriority(position);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -106,8 +107,6 @@ public class AddingTaskDialogFragment extends DialogFragment {
                         calendar.set(Calendar.YEAR, year);
                         calendar.set(Calendar.MONTH, monthOfYear);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        //Calendar dateCalendar = Calendar.getInstance();
-                        //dateCalendar.set(year, monthOfYear, dayOfMonth);
                         etDate.setText(Utils.getDate(calendar.getTimeInMillis()));
                     }
 
@@ -134,8 +133,6 @@ public class AddingTaskDialogFragment extends DialogFragment {
                         calendar.set(Calendar.HOUR_OF_DAY, houreOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         calendar.set(Calendar.SECOND, 0);
-                        //Calendar timeCalendar = Calendar.getInstance();
-                        //timeCalendar.set(0, 0, 0, hourseOfDay, minute);
                         etTime.setText(Utils.getTime(calendar.getTimeInMillis()));
                     }
 
@@ -151,11 +148,11 @@ public class AddingTaskDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                remindData.setTitle(etTitle.getText().toString()); //присваивание title из RemindData введенный title
+                task.setTitle(etTitle.getText().toString()); //присваивание title из RemindData введенный title
                 if (etDate.length() != 0 || etTime.length() != 0) {
-                    remindData.setDate(calendar.getTimeInMillis()); //присваиваем date из RemindData введенный date
+                    task.setDate(calendar.getTimeInMillis()); //присваиваем date из RemindData введенный date
                 }
-                addingTaskListener.onTaskAdded(remindData); //передача нового объекта, заполненного данными в onTaskAdded
+                addingTaskListener.onTaskAdded(task); //передача нового объекта, заполненного данными в onTaskAdded
                 dialog.dismiss();
             }
         });

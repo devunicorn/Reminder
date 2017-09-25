@@ -24,7 +24,7 @@ public class Constants {
 
 
     //database
-    public static final int DATABASE_VERSION = 1;
+    /*public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "reminder_database";
 
     public static final String TASKS_TABLE = "tasks_table";
@@ -34,5 +34,9 @@ public class Constants {
     public static final String TASK_PRIORITY_COLUMN = "task_priority";
     public static final String TASK_STATUS_COLUMN = "task_status";
     public static final String TASK_TIME_STAMP_COLUMN = "task_time_stamp";
+
+    public static final String SELECTION_STATUS = Constants.TASK_STATUS_COLUMN + " = ?";
+    public static final String SELECTION_TIME_STAMP  = Constants.TASK_STATUS_COLUMN + " = ?";
+    */
 
 }

@@ -19,12 +19,18 @@ import android.widget.Toast;
 
 import com.devunicorn.reminder.adapter.TabsFragmentAdapter;
 import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.database.DBHelper;
 import com.devunicorn.reminder.dialog.AddingTaskDialogFragment;
+import com.devunicorn.reminder.fragment.AbstractTabFragment;
+//import com.devunicorn.reminder.fragment.DoneFragment;
 import com.devunicorn.reminder.fragment.TodoFragment;
+import com.devunicorn.reminder.fragment.TodoFragment.OnTaskDoneListener;
+
+import static com.devunicorn.reminder.fragment.DoneFragment.*;
 
 
 public class MainActivity extends AppCompatActivity
-        implements AddingTaskDialogFragment.AddingTaskListener {
+        implements AddingTaskDialogFragment.AddingTaskListener, OnTaskDoneListener, OnTaskRestoreListener {
 
     private static final int LAYOUT = R.layout.activity_main;
 
@@ -32,9 +38,12 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
     private FloatingActionButton fab;
-    private FragmentManager fragmentManager;
-    private TabsFragmentAdapter adapter;
-    private TodoFragment todoFragment;
+    FragmentManager fragmentManager;
+    TabsFragmentAdapter adapter;
+    AbstractTabFragment todoFragment;
+    AbstractTabFragment doneFragment;
+
+    public DBHelper dbHelper;
 
 
     @Override
@@ -43,7 +52,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        dbHelper = new DBHelper(getApplicationContext());
+
         fragmentManager = getFragmentManager();
+
+        //todoFragment = (AbstractTabFragment) adapter.getItem(0);
+        //doneFragment = (AbstractTabFragment) adapter.getItem(1);
 
         initToolbar();
         initNavigationView();
@@ -114,13 +128,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTaskAdded(RemindData newTask) {
 
-        todoFragment.addTask(newTask); // добавление только на вкладку HISTORY
-
-        //Toast.makeText(this, "Task added", Toast.LENGTH_LONG).show();
+        todoFragment.addTask(newTask, true); // добавление только на вкладку
     }
 
     @Override
     public void onTaskAddingCancel() {
         Toast.makeText(this, "Task adding cancel", Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onTaskDone(RemindData task) {
+            doneFragment.addTask(task, false);
+    }
+
+    @Override
+    public void onTaskRestore(RemindData task) {
+        todoFragment.addTask(task, false);
+    }
+
 }

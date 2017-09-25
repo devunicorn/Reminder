@@ -20,7 +20,6 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
 
     public TabsFragmentAdapter(Context context, FragmentManager fm) {
         super(fm);
-
         this.context = context;
         initTabsMap(context);
     }
