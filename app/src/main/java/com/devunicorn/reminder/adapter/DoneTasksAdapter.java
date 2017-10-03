@@ -73,7 +73,14 @@ public class DoneTasksAdapter extends TaskAdapter {
 
                         switch (menuItem.getItemId()) {
                             case R.id.taskDelete:
-                                Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_LONG).show();
+                                Handler handler = new Handler(); //для срабатывая анимации, до того, как вызовется диалог
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getTaskFragment().removeTaskDialog(taskViewHolder.getLayoutPosition());
+                                    }
+                                }, 100);
+                                //Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_LONG).show();
                                 break;
                             default:
                                 break;

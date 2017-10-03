@@ -55,10 +55,9 @@ public abstract class TaskFragment extends Fragment {
 
         ModelTask removingTask = adapter.getItem(location);
 
-            //ModelTask removingTask = (ModelTask) item;
             final long timeStamp = removingTask.getTimeStamp();
-
             final boolean[] isRemoved = {false};
+
             dialogBuilder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

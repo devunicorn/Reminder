@@ -74,7 +74,14 @@ public class CurrentTasksAdapter extends TaskAdapter {
 
                         switch (menuItem.getItemId()) {
                             case R.id.taskDelete:
-                                Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_LONG).show();
+                                Handler handler = new Handler(); //для срабатывая анимации, до того, как вызовется диалог
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getTaskFragment().removeTaskDialog(taskViewHolder.getLayoutPosition());
+                                    }
+                                }, 1000);
+                                //Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_LONG).show();
                                 break;
                             default:
                                 break;
@@ -96,22 +103,6 @@ public class CurrentTasksAdapter extends TaskAdapter {
         taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
         taskViewHolder.priority.setColorFilter(resources.getColor(task.getPriorityColor()));
         taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_blank_circle_white_48dp);
-
-
-        /*itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getTaskFragment().removeTaskDialog(taskViewHolder.getLayoutPosition());
-                    }
-                }, 1000);
-
-                return true;
-            }
-        });*/
 
 
         taskViewHolder.priority.setOnClickListener(new View.OnClickListener() { //на клик по Приоритету, меняется его статус
