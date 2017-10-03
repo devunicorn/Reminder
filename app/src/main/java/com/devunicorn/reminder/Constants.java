@@ -4,11 +4,8 @@ package com.devunicorn.reminder;
 
 public class Constants {
 
-    public static final int TODO_LAYOUT = R.layout.fragment_todo;
-    public static final int DONE_LAYOUT = R.layout.fragment_done;
-
-    public static final int TAB_ONE = 0;
-    public static final int TAB_TWO = 1;
+    public static final int TODO_LAYOUT = R.layout.fragment_current_task;
+    public static final int DONE_LAYOUT = R.layout.fragment_done_task;
 
 
     //priority status

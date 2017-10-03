@@ -17,20 +17,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.devunicorn.reminder.adapter.TabsFragmentAdapter;
-import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.adapter.TabAdapter;
+import com.devunicorn.reminder.data.ModelTask;
 import com.devunicorn.reminder.database.DBHelper;
 import com.devunicorn.reminder.dialog.AddingTaskDialogFragment;
-import com.devunicorn.reminder.fragment.AbstractTabFragment;
-//import com.devunicorn.reminder.fragment.DoneFragment;
-import com.devunicorn.reminder.fragment.TodoFragment;
-import com.devunicorn.reminder.fragment.TodoFragment.OnTaskDoneListener;
+import com.devunicorn.reminder.fragment.TaskFragment;
+import com.devunicorn.reminder.fragment.DoneTaskFragment;
+import com.devunicorn.reminder.fragment.CurrentTaskFragment;
 
-import static com.devunicorn.reminder.fragment.DoneFragment.*;
 
 
 public class MainActivity extends AppCompatActivity
-        implements AddingTaskDialogFragment.AddingTaskListener, OnTaskDoneListener, OnTaskRestoreListener {
+        implements AddingTaskDialogFragment.AddingTaskListener,
+        CurrentTaskFragment.OnTaskDoneListener, DoneTaskFragment.OnTaskRestoreListener {
 
     private static final int LAYOUT = R.layout.activity_main;
 
@@ -38,26 +37,24 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
     private FloatingActionButton fab;
+
     FragmentManager fragmentManager;
-    TabsFragmentAdapter adapter;
-    AbstractTabFragment todoFragment;
-    AbstractTabFragment doneFragment;
+    TabAdapter tabAdapter;
+
+    TaskFragment currentTaskFragment;
+    TaskFragment doneTaskFragment;
 
     public DBHelper dbHelper;
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppDefault);
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
-        dbHelper = new DBHelper(getApplicationContext());
-
         fragmentManager = getFragmentManager();
-
-        //todoFragment = (AbstractTabFragment) adapter.getItem(0);
-        //doneFragment = (AbstractTabFragment) adapter.getItem(1);
+        dbHelper = new DBHelper(getApplicationContext());
 
         initToolbar();
         initNavigationView();
@@ -68,32 +65,50 @@ public class MainActivity extends AppCompatActivity
 
     private void initToolbar() {
         toolBar = (Toolbar) findViewById(R.id.toolbar);
-        toolBar.setTitle(R.string.app_name);
-        toolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                return false;
-            }
-        });
-
-        toolBar.inflateMenu(R.menu.menu);
+        if(toolBar != null) {
+            toolBar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            setSupportActionBar(toolBar);
+            toolBar.setTitle(R.string.app_name);
+        }
     }
 
     private void initTabs() {
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        adapter = new TabsFragmentAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
-        todoFragment = (TodoFragment) adapter.getItem(0);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.current_task));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task));
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tabAdapter = new TabAdapter(fragmentManager, 2);
+
+        viewPager.setAdapter(tabAdapter);
+        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+        doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
     }
 
     private void initNavigationView() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(this, drawerLayout, toolBar, R.string.view_navigation_open, R.string.view_navigation_close);
-        drawerLayout.addDrawerListener(toogle);
+        ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(this, drawerLayout, toolBar, R.string.view_navigation_open, R.string.view_navigation_close); //иконка, открывающая navigation
+        drawerLayout.setDrawerListener(toogle);
         toogle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
@@ -102,16 +117,18 @@ public class MainActivity extends AppCompatActivity
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 drawerLayout.closeDrawers();
                 switch (menuItem.getItemId()) {
-                    case R.id.actionNotificationItem:
-                        showNotificationTab();
+                    case R.id.todoNotificationItem:
+                        showNotificationTab(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+                    case R.id.doneNotificationItem:
+                        showNotificationTab(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
                 }
                 return true;
             }
         });
     }
 
-    private void showNotificationTab() {
-        viewPager.setCurrentItem(Constants.TAB_ONE);
+    private void showNotificationTab(int item) {
+        viewPager.setCurrentItem(item);
     }
 
     private void initFab() {
@@ -120,16 +137,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 DialogFragment addingTaskDialogFragment = new AddingTaskDialogFragment();
-                addingTaskDialogFragment.show(fragmentManager, "AddingTAskDialogFragment");
+                addingTaskDialogFragment.show(fragmentManager, "AddingTaskDialogFragment");
             }
         });
     }
 
     @Override
-    public void onTaskAdded(RemindData newTask) {
+    public void onTaskAdded(ModelTask newTask) {
 
-        todoFragment.addTask(newTask, true); // добавление только на вкладку
+        currentTaskFragment.addTask(newTask, true); // добавление только на вкладку
     }
+
 
     @Override
     public void onTaskAddingCancel() {
@@ -137,13 +155,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTaskDone(RemindData task) {
-            doneFragment.addTask(task, false);
+    public void onTaskDone(ModelTask task) {
+        doneTaskFragment.addTask(task, false);
     }
 
     @Override
-    public void onTaskRestore(RemindData task) {
-        todoFragment.addTask(task, false);
+    public void onTaskRestore(ModelTask task) {
+        currentTaskFragment.addTask(task, false);
     }
 
 }

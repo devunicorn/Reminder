@@ -1,7 +1,6 @@
 package com.devunicorn.reminder.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,26 +11,26 @@ import android.view.ViewGroup;
 
 import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
-import com.devunicorn.reminder.adapter.TodoTaskAdapter;
-import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.adapter.CurrentTasksAdapter;
+import com.devunicorn.reminder.data.ModelTask;
 import com.devunicorn.reminder.database.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TodoFragment extends AbstractTabFragment {
+public class CurrentTaskFragment extends TaskFragment {
 
 
-    public TodoFragment() {
+    public CurrentTaskFragment() {
+        // Required empty public constructor
     }
 
-    public OnTaskDoneListener onTaskDoneListener;
+    OnTaskDoneListener onTaskDoneListener;
 
     public interface OnTaskDoneListener {
-        void onTaskDone(RemindData task);
+        void onTaskDone(ModelTask task);
     }
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -44,37 +43,24 @@ public class TodoFragment extends AbstractTabFragment {
         }
     }
 
-    public static TodoFragment getInstance(Context context) {
-        Bundle args = new Bundle();
-        TodoFragment fragment = new TodoFragment();
-        fragment.setArguments(args);
-        fragment.setContext(context);
-        fragment.setTitle(context.getString(R.string.tab_item_todo));
-        return fragment;
-    }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(Constants.TODO_LAYOUT, container, false);
-        rv = (RecyclerView) rootView.findViewById(R.id.rvTodoFragment); //найдем recycler view для заагрузки card view в layout
-        rv.setLayoutManager(new LinearLayoutManager(getActivity())); //контекст, расположенный в AbstractTabFragment
-        adapter = new TodoTaskAdapter(this);
-        rv.setAdapter(adapter);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvCurrentFragment); //найдем recycler view для загрузки card view в layout
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager); //контекст, расположенный в TaskFragment
+        adapter = new CurrentTasksAdapter(this);
+        recyclerView.setAdapter(adapter);
         return rootView;
-    }
-
-
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     @Override
     public void addTaskFromDB() {
-        List<RemindData> tasks = new ArrayList<>();
-        tasks.addAll(mainActivity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS + " OR "
+        List<ModelTask> tasks = new ArrayList<>();
+        tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS + " OR "
                 + DBHelper.SELECTION_STATUS, new String[]{Integer.toString(Constants.STATUS_CURRENT),
                 Integer.toString(Constants.STATUS_OVERDUE)}, DBHelper.TASK_DATE_COLUMN));
         for (int i = 0; i < tasks.size(); i++) {
@@ -83,7 +69,7 @@ public class TodoFragment extends AbstractTabFragment {
     }
 
     @Override
-    public void moveTask(RemindData task) {
+    public void moveTask(ModelTask task) {
         onTaskDoneListener.onTaskDone(task);
     }
 }

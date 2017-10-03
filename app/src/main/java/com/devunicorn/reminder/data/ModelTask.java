@@ -6,21 +6,20 @@ import com.devunicorn.reminder.R;
 
 import java.util.Date;
 
-public class RemindData {
+public class ModelTask {
 
     private String title;
     private long date;
-    private long time;
     private int priority;
     private int status;
     private long timeStamp;
 
-    public RemindData() {
+    public ModelTask() {
         this.status = -1;
         this.timeStamp = new Date().getTime();
     }
 
-    public RemindData(String title, long date, int priority, int status, long timeStamp) {
+    public ModelTask(String title, long date, int priority, int status, long timeStamp) {
         this.title = title;
         this.date = date;
         this.priority = priority;
@@ -49,12 +48,12 @@ public class RemindData {
                     return R.color.priority_low_selected;
                 }
             default:
-                return 0;
+                return Constants.PRIORITY_LOW;
         }
     }
 
     public long getTimeStamp() {
-        return timeStamp;
+        return this.timeStamp;
     }
 
     public void setTimeStamp(long timeStamp) {
@@ -93,11 +92,4 @@ public class RemindData {
         this.date = date;
     }
 
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
 }

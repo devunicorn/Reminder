@@ -15,22 +15,22 @@ import android.widget.TextView;
 
 import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
-import com.devunicorn.reminder.data.RemindData;
-import com.devunicorn.reminder.fragment.TodoFragment;
+import com.devunicorn.reminder.data.ModelTask;
+import com.devunicorn.reminder.fragment.CurrentTaskFragment;
 import com.devunicorn.reminder.fragment.Utils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class TodoTaskAdapter extends RemindListAdapter {
+public class CurrentTasksAdapter extends TaskAdapter {
 
-    public TodoTaskAdapter(TodoFragment todoFragment) {
-        super(todoFragment);
+    public CurrentTasksAdapter(CurrentTaskFragment taskFragment) {
+        super(taskFragment);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.remind_item, viewGroup, false);
+                .inflate(R.layout.model_task, viewGroup, false);
 
         CardView cardView = (CardView) view.findViewById(R.id.cardView);
         TextView title = (TextView) view.findViewById(R.id.title);
@@ -42,17 +42,17 @@ public class TodoTaskAdapter extends RemindListAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final RemindData item = items.get(position);
+        final ModelTask task = items.get(position);
+
         viewHolder.itemView.setEnabled(true); //активация возможности нажатия таска
         final TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
 
         final View itemView = taskViewHolder.itemView;
         final Resources resources = itemView.getResources();
 
-
-        taskViewHolder.title.setText(item.getTitle());
-        if (item.getDate() != 0) {
-            taskViewHolder.date.setText(Utils.getFullDate(item.getDate()));
+        taskViewHolder.title.setText(task.getTitle());
+        if (task.getDate() != 0) {
+            taskViewHolder.date.setText(Utils.getFullDate(task.getDate()));
         } else {
             taskViewHolder.date.setText(null);
         }
@@ -60,14 +60,16 @@ public class TodoTaskAdapter extends RemindListAdapter {
         itemView.setVisibility(View.VISIBLE);
         taskViewHolder.priority.setEnabled(true);
 
+        itemView.setBackgroundColor(resources.getColor(R.color.gray_50));
+        taskViewHolder.cardView.setBackgroundColor(resources.getColor(R.color.gray_50));
 
         taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
         taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
-        taskViewHolder.priority.setColorFilter(resources.getColor(item.getPriorityColor()));
+        taskViewHolder.priority.setColorFilter(resources.getColor(task.getPriorityColor()));
         taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_blank_circle_white_48dp);
 
 
-        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        /*itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Handler handler = new Handler();
@@ -80,7 +82,7 @@ public class TodoTaskAdapter extends RemindListAdapter {
 
                 return true;
             }
-        });
+        });*/
 
 
         taskViewHolder.priority.setOnClickListener(new View.OnClickListener() { //на клик по Приоритету, меняется его статус
@@ -88,13 +90,16 @@ public class TodoTaskAdapter extends RemindListAdapter {
             public void onClick(View v) {
                 taskViewHolder.priority.setEnabled(false);
 
-                item.setStatus(Constants.STATUS_DONE);
+                task.setStatus(Constants.STATUS_DONE);
 
-                getTaskFragment().mainActivity.dbHelper.update().status(item.getTimeStamp(), Constants.STATUS_DONE);
+                getTaskFragment().activity.dbHelper.update().status(task.getTimeStamp(), Constants.STATUS_DONE);
+
+                itemView.setBackgroundColor(resources.getColor(R.color.gray_200));
+                taskViewHolder.cardView.setBackgroundColor(resources.getColor(R.color.gray_200));
 
                 taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));
                 taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_disabled_material_light));
-                taskViewHolder.priority.setColorFilter(resources.getColor(item.getPriorityColor()));
+                taskViewHolder.priority.setColorFilter(resources.getColor(task.getPriorityColor()));
 
                 ObjectAnimator flipIn = ObjectAnimator.ofFloat(taskViewHolder.priority, "rotationY", -180f, 0f);
 
@@ -106,8 +111,8 @@ public class TodoTaskAdapter extends RemindListAdapter {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        if (item.getStatus() == Constants.STATUS_DONE) {
-                            taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_blank_circle_white_48dp);
+                        if (task.getStatus() == Constants.STATUS_DONE) {
+                            taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_marked_circle);
 
                             ObjectAnimator translationX = ObjectAnimator.ofFloat(itemView,
                                     "translationX", 0f, itemView.getWidth());
@@ -125,8 +130,7 @@ public class TodoTaskAdapter extends RemindListAdapter {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     itemView.setVisibility(View.GONE);
-
-                                    getTaskFragment().moveTask(item);
+                                    getTaskFragment().moveTask(task);
                                     removeItem(taskViewHolder.getLayoutPosition());
                                 }
 

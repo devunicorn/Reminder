@@ -21,7 +21,7 @@ import android.widget.TimePicker;
 
 import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
-import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.data.ModelTask;
 import com.devunicorn.reminder.fragment.Utils;
 
 import java.util.Calendar;
@@ -31,17 +31,16 @@ public class AddingTaskDialogFragment extends DialogFragment {
     private AddingTaskListener addingTaskListener;
 
     public interface AddingTaskListener {
-        void onTaskAdded(RemindData newTask);
+        void onTaskAdded(ModelTask newTask);
         void onTaskAddingCancel();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         try {
             addingTaskListener = (AddingTaskListener) activity;
-        } catch (ClassCastException ex) {
+        } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement AddingTaskListener");
         }
     }
@@ -76,7 +75,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setView(container);
 
-        final RemindData task = new RemindData();
+        final ModelTask task = new ModelTask();
 
 
         ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(),
@@ -147,11 +146,12 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int i) {
-                task.setTitle(etTitle.getText().toString()); //присваивание title из RemindData введенный title
+            public void onClick(DialogInterface dialog, int which) {
+                task.setTitle(etTitle.getText().toString()); //присваивание title из ModelTask введенный title
                 if (etDate.length() != 0 || etTime.length() != 0) {
-                    task.setDate(calendar.getTimeInMillis()); //присваиваем date из RemindData введенный date
+                    task.setDate(calendar.getTimeInMillis()); //присваиваем date из ModelTask введенный date
                 }
+                task.setStatus(Constants.STATUS_CURRENT);
                 addingTaskListener.onTaskAdded(task); //передача нового объекта, заполненного данными в onTaskAdded
                 dialog.dismiss();
             }
@@ -159,7 +159,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int i) {
+            public void onClick(DialogInterface dialog, int which) {
                 addingTaskListener.onTaskAddingCancel();
                 dialog.cancel();
             }

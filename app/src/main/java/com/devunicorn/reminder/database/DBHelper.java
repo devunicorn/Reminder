@@ -7,8 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import com.devunicorn.reminder.Constants;
-import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.data.ModelTask;
 
 //
 // СОЗДАНИЕ БАЗЫ ДАННЫХ
@@ -28,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TASK_STATUS_COLUMN = "task_status";
     public static final String TASK_TIME_STAMP_COLUMN = "task_time_stamp";
 
-    private static final String TASKS_TABLE_CREATE_SCRIPT = "CREATE TABLE "
+    private static final String TASKS_TABLE_CREATE_SCRIPT =  "CREATE TABLE "
             + TASKS_TABLE + " (" + BaseColumns._ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TASK_TITLE_COLUMN + " TEXT NOT NULL, "
             + TASK_DATE_COLUMN + " LONG, " + TASK_PRIORITY_COLUMN + " INTEGER, "
@@ -36,7 +35,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public static final String SELECTION_STATUS = DBHelper.TASK_STATUS_COLUMN + " = ?";
-    public static final String SELECTION_TIME_STAMP = DBHelper.TASK_STATUS_COLUMN + " = ?";
+    public static final String SELECTION_TIME_STAMP = TASK_TIME_STAMP_COLUMN + " = ?";
+    public static final String SELECTION_LIKE_TITLE = TASK_TITLE_COLUMN + " LIKE ?";
 
     private DBQueryManager queryManager;
     private DBUpdateManager updateManager;
@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void saveTask(RemindData task) {
+    public void saveTask(ModelTask task) {
         ContentValues newValues = new ContentValues();
 
         newValues.put(TASK_TITLE_COLUMN, task.getTitle());
@@ -81,7 +81,5 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void removeTask(long timeStamp) {
         getWritableDatabase().delete(TASKS_TABLE, SELECTION_TIME_STAMP, new String[]{Long.toString(timeStamp)});
-
     }
-
 }
