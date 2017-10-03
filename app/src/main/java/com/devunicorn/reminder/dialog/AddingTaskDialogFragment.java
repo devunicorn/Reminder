@@ -11,13 +11,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
-import com.devunicorn.reminder.data.RemindData;
+import com.devunicorn.reminder.data.ModelTask;
 import com.devunicorn.reminder.fragment.Utils;
 
 import java.util.Calendar;
@@ -25,21 +29,18 @@ import java.util.Calendar;
 public class AddingTaskDialogFragment extends DialogFragment {
 
     private AddingTaskListener addingTaskListener;
-    private RemindData remindData;
 
     public interface AddingTaskListener {
-        void onTaskAdded(RemindData newTask);
-
+        void onTaskAdded(ModelTask newTask);
         void onTaskAddingCancel();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         try {
             addingTaskListener = (AddingTaskListener) activity;
-        } catch (ClassCastException ex) {
+        } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement AddingTaskListener");
         }
     }
@@ -47,7 +48,6 @@ public class AddingTaskDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        remindData = new RemindData();
         final Calendar calendar = Calendar.getInstance();//текущее время
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY), +1); //если не указано время, срабатывает через час
 
@@ -67,11 +67,32 @@ public class AddingTaskDialogFragment extends DialogFragment {
         TextInputLayout tilTime = (TextInputLayout) container.findViewById(R.id.tilDialogTaskTime);
         final EditText etTime = tilTime.getEditText();
 
+        Spinner spPriority = (Spinner) container.findViewById(R.id.spDialogTaskPriority);
+
         tilTitle.setHint(getResources().getString(R.string.task_title));
         tilDate.setHint(getResources().getString(R.string.task_date));
         tilTime.setHint(getResources().getString(R.string.task_time));
 
         builder.setView(container);
+
+        final ModelTask task = new ModelTask();
+
+
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, Constants.PRIORITY_LEVELS);
+        spPriority.setAdapter(priorityAdapter);
+
+        spPriority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                task.setPriority(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +106,6 @@ public class AddingTaskDialogFragment extends DialogFragment {
                         calendar.set(Calendar.YEAR, year);
                         calendar.set(Calendar.MONTH, monthOfYear);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        //Calendar dateCalendar = Calendar.getInstance();
-                        //dateCalendar.set(year, monthOfYear, dayOfMonth);
                         etDate.setText(Utils.getDate(calendar.getTimeInMillis()));
                     }
 
@@ -113,8 +132,6 @@ public class AddingTaskDialogFragment extends DialogFragment {
                         calendar.set(Calendar.HOUR_OF_DAY, houreOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         calendar.set(Calendar.SECOND, 0);
-                        //Calendar timeCalendar = Calendar.getInstance();
-                        //timeCalendar.set(0, 0, 0, hourseOfDay, minute);
                         etTime.setText(Utils.getTime(calendar.getTimeInMillis()));
                     }
 
@@ -129,19 +146,20 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int i) {
-                remindData.setTitle(etTitle.getText().toString()); //присваивание title из RemindData введенный title
-                if(etDate.length() != 0 || etTime.length() != 0) {
-                    remindData.setDate(calendar.getTimeInMillis()); //присваиваем date из RemindData введенный date
+            public void onClick(DialogInterface dialog, int which) {
+                task.setTitle(etTitle.getText().toString()); //присваивание title из ModelTask введенный title
+                if (etDate.length() != 0 || etTime.length() != 0) {
+                    task.setDate(calendar.getTimeInMillis()); //присваиваем date из ModelTask введенный date
                 }
-                addingTaskListener.onTaskAdded(remindData); //передача нового объекта, заполненного данными в onTaskAdded
+                task.setStatus(Constants.STATUS_CURRENT);
+                addingTaskListener.onTaskAdded(task); //передача нового объекта, заполненного данными в onTaskAdded
                 dialog.dismiss();
             }
         });
 
         builder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int i) {
+            public void onClick(DialogInterface dialog, int which) {
                 addingTaskListener.onTaskAddingCancel();
                 dialog.cancel();
             }
