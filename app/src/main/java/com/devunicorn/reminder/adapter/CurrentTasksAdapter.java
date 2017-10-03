@@ -7,11 +7,15 @@ import android.animation.ObjectAnimator;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devunicorn.reminder.Constants;
 import com.devunicorn.reminder.R;
@@ -35,9 +39,10 @@ public class CurrentTasksAdapter extends TaskAdapter {
         CardView cardView = (CardView) view.findViewById(R.id.cardView);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView date = (TextView) view.findViewById(R.id.date);
+        ImageView taskMenu = (ImageView) view.findViewById(R.id.taskMenu);
         CircleImageView priority = (CircleImageView) view.findViewById(R.id.priority);
 
-        return new TaskViewHolder(view, cardView, title, date, priority);
+        return new TaskViewHolder(view, cardView, title, date, taskMenu, priority);
     }
 
     @Override
@@ -56,6 +61,30 @@ public class CurrentTasksAdapter extends TaskAdapter {
         } else {
             taskViewHolder.date.setText(null);
         }
+
+        taskViewHolder.taskMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), taskViewHolder.taskMenu);
+                popupMenu.inflate(R.menu.task_menu);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        switch (menuItem.getItemId()) {
+                            case R.id.taskDelete:
+                                Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_LONG).show();
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
 
         itemView.setVisibility(View.VISIBLE);
         taskViewHolder.priority.setEnabled(true);

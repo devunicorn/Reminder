@@ -24,8 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                android:background="?attr/colorPrimary" />
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
@@ -34,8 +33,7 @@
                 app:tabIndicatorColor="@android:color/white"
                 app:tabIndicatorHeight="6dp"
                 app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@android:color/white"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:tabTextColor="@android:color/white" />
 
         </android.support.design.widget.AppBarLayout>
 
