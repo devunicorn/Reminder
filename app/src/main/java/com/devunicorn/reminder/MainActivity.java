@@ -21,6 +21,7 @@ import com.devunicorn.reminder.adapter.TabAdapter;
 import com.devunicorn.reminder.data.ModelTask;
 import com.devunicorn.reminder.database.DBHelper;
 import com.devunicorn.reminder.dialog.AddingTaskDialogFragment;
+import com.devunicorn.reminder.dialog.EditTaskDialogFragment;
 import com.devunicorn.reminder.fragment.TaskFragment;
 import com.devunicorn.reminder.fragment.DoneTaskFragment;
 import com.devunicorn.reminder.fragment.CurrentTaskFragment;
@@ -29,7 +30,8 @@ import com.devunicorn.reminder.fragment.CurrentTaskFragment;
 
 public class MainActivity extends AppCompatActivity
         implements AddingTaskDialogFragment.AddingTaskListener,
-        CurrentTaskFragment.OnTaskDoneListener, DoneTaskFragment.OnTaskRestoreListener {
+        CurrentTaskFragment.OnTaskDoneListener, DoneTaskFragment.OnTaskRestoreListener ,
+        EditTaskDialogFragment.EditingTaskListener{
 
     private static final int LAYOUT = R.layout.activity_main;
 
@@ -164,4 +166,9 @@ public class MainActivity extends AppCompatActivity
         currentTaskFragment.addTask(task, false);
     }
 
+    @Override
+    public void onTaskEdited(ModelTask updatedTask) {
+        currentTaskFragment.updateTask(updatedTask);
+        dbHelper.update().task(updatedTask);
+    }
 }

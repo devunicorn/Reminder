@@ -8,7 +8,9 @@
     <string name="current_task">Current</string>
     <string name="done_task">Done</string>
 
-    <string name="dialog_title">AddingTaskDialog</string>
+    <string name="dialog_editing_title">Editing Task</string>
+
+    <string name="dialog_title">Adding Task</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_error_empty_title">Please, enter the title.</string>
@@ -19,6 +21,8 @@
 
     <string name="dialog_removing_message">Delete this task?</string>
     <string name="dialog_removed">Task was removed</string>
+
     <string name="task_delete">Delete</string>
+    <string name="task_edit">Edit</string>
 
 </resources>

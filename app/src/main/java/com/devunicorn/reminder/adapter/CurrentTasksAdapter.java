@@ -76,6 +76,9 @@ public class CurrentTasksAdapter extends TaskAdapter {
                             case R.id.taskDelete:
                                 deleteTask(taskViewHolder);
                                 break;
+                            case R.id.taskEdit:
+                                getTaskFragment().showTaskEditDialog(task);
+                                break;
                             default:
                                 break;
                         }

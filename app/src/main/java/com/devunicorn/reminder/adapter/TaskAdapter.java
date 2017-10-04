@@ -44,6 +44,16 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         notifyItemInserted(location);
     }
 
+    public void updateTask(ModelTask newTask) {
+        for (int i = 0; i < getItemCount(); i++) {
+                ModelTask task = getItem(i);
+                if (newTask.getTimeStamp() == task.getTimeStamp()) {
+                    removeItem(i);
+                    getTaskFragment().addTask(newTask, false);
+                }
+        }
+    }
+
     public void removeItem(int location) { //удаление элемента списка
         if (location >= 0 && location <= getItemCount() - 1) {
             items.remove(location);
