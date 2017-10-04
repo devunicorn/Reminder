@@ -74,14 +74,7 @@ public class CurrentTasksAdapter extends TaskAdapter {
 
                         switch (menuItem.getItemId()) {
                             case R.id.taskDelete:
-                                Handler handler = new Handler(); //для срабатывая анимации, до того, как вызовется диалог
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getTaskFragment().removeTaskDialog(taskViewHolder.getLayoutPosition());
-                                    }
-                                }, 1000);
-                                //Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_LONG).show();
+                                deleteTask(taskViewHolder);
                                 break;
                             default:
                                 break;

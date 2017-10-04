@@ -2,6 +2,7 @@ package com.devunicorn.reminder.adapter;
 
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -48,6 +49,16 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             items.remove(location);
             notifyItemRemoved(location);
         }
+    }
+
+    public void deleteTask(final TaskViewHolder taskViewHolder) {
+        Handler handler = new Handler(); //для срабатывая анимации, до того, как вызовется диалог
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getTaskFragment().removeTaskDialog(taskViewHolder.getLayoutPosition());
+            }
+        }, 10);
     }
 
     @Override
